@@ -1,0 +1,40 @@
+---
+- include: setup-RedHat.yml
+  when: ansible_os_family == 'RedHat'
+
+- include: setup-Debian.yml
+  when: ansible_os_family == 'Debian'
+
+- name: Ensure metricbeat is started and enabled at boot.
+  service:
+    name: metricbeat
+    state: started
+    enabled: yes
+
+- name: Copy metricbeat configuration.
+  template:
+    src: metricbeat.yml.j2
+    dest: /etc/metricbeat/metricbeat.yml
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart metricbeat
+
+- name: Export metricbeat template
+  command: >
+    metricbeat export template
+  register: metricbeat_template
+  when: metricbeat_setup_templates
+
+- name: Install metricbeat template on elasticsearch
+  uri:
+    url: "{{ metricbeat_elasticsearch_endpoint }}/_template/metricbeat-6.1.3"
+    method: PUT
+    body: "{{ metricbeat_template.stdout }}"
+    body_format: json
+  when: metricbeat_setup_templates
+
+- name: Setup kibana dashboards
+  command: > 
+    metricbeat setup --dashboards 
+  when: metricbeat_setup_templates

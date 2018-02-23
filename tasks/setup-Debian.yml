@@ -1,0 +1,22 @@
+---
+- name: Ensure dependency is installed (Ubuntu).
+  apt: 
+    name: apt-transport-https 
+    state: present
+
+- name: Add Elasticsearch apt key.
+  apt_key:
+    url: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+    state: present
+
+- name: Add metricbeat repository.
+  apt_repository:
+    repo: 'deb https://artifacts.elastic.co/packages/{{ metricbeat_major_version }}/apt stable main'
+    state: present
+    update_cache: yes
+
+- name: Install metricbeat.
+  apt: 
+    name: metricbeat{% if metricbeat_version is defined and metricbeat_version != "" %}={{ metricbeat_version }}{% endif %} 
+    state: present
+    update_cache: yes

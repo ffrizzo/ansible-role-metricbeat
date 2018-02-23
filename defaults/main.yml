@@ -1,0 +1,16 @@
+---
+metricbeat_major_version: "6.x"
+metricbeat_version: ""
+
+metricbeat_elasticsearch_endpoint: http://localhost:9200
+
+metricbeat_tags: ["metricbeat"]
+metricbeat_fields: ""
+
+metricbeat_outputs:
+  - name: console
+    configs:
+      pretty: true
+
+metricbeat_logging_level: info      
+metricbeat_logging_selectors: '["*"]'

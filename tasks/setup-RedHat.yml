@@ -1,0 +1,17 @@
+---
+- name: Add Elasticsearch GPG key.
+  rpm_key:
+    key: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+    state: present
+
+- name: Add metricbeat repository.
+  template:
+    src: metricbeat.repo.j2
+    dest: /etc/yum.repos.d/metricbeat.repo
+    mode: 0644
+
+- name: Install metricbeat.
+  yum: 
+    name: metricbeat{% if metricbeat_version is defined and metricbeat_version != "" %}-{{ metricbeat_version }}{% endif %} 
+    state: present
+    update_cache: yes
