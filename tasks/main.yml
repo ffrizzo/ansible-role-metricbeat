@@ -45,7 +45,7 @@
     owner: root
     group: root
     mode: 0644
-  with_items: "{{ metricbeat_modules | dafault(['system']) }}"
+  with_items: "{{ metricbeat_file_modules | default(['system']) }}"
   notify: restart metricbeat
 
 - name: Build metricbeat template modules configuration  
@@ -55,7 +55,7 @@
     owner: root
     group: root
     mode: 0644
-  with_items: "{{ metricbeat_modules | dafault([]) }}"
+  with_items: "{{ metricbeat_modules | default([]) }}"
   notify: restart metricbeat
 
 - name: Export metricbeat template
