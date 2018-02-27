@@ -5,19 +5,57 @@
 - include: setup-Debian.yml
   when: ansible_os_family == 'Debian'
 
-- name: Ensure metricbeat is started and enabled at boot.
+- name: Ensure metricbeat is started and enabled at boot
   service:
     name: metricbeat
     state: started
     enabled: yes
 
-- name: Copy metricbeat configuration.
+- name: Copy metricbeat configuration
   template:
     src: metricbeat.yml.j2
     dest: /etc/metricbeat/metricbeat.yml
     owner: root
     group: root
     mode: 0644
+  notify: restart metricbeat
+
+- stat:
+    path: /etc/metricbeat/modules
+  register: modules
+
+- name: Clear metricbeat modules configuration
+  file: 
+    path: /etc/metricbeat/modules.d/
+    state: absent
+  when: modules.stat.exists
+
+- name: Create metric modules folder
+  file:
+    path: /etc/metricbeat/modules.d/
+    state: directory
+    group: root
+    owner: root
+    mode: 0655
+  
+- name: Copy metricbeat file modules configuration  
+  copy:
+    src: modules/{{ item }}.yml
+    dest: /etc/metricbeat/modules.d/{{ item }}.yml
+    owner: root
+    group: root
+    mode: 0644
+  with_items: "{{ metricbeat_modules | dafault(['system']) }}"
+  notify: restart metricbeat
+
+- name: Build metricbeat template modules configuration  
+  template:
+    src: modules/{{ item }}.yml.j2
+    dest: /etc/metricbeat/modules.d/{{ item }}.yml
+    owner: root
+    group: root
+    mode: 0644
+  with_items: "{{ metricbeat_modules | dafault([]) }}"
   notify: restart metricbeat
 
 - name: Export metricbeat template

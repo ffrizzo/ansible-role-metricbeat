@@ -1,0 +1,6 @@
+[metricbeat-{{ metricbeat_major_version }}]
+name=metricbeat repository for {{ metricbeat_major_version }}.x packages
+baseurl=https://artifacts.elastic.co/packages/{{ metricbeat_major_version }}/centos
+gpgcheck=1
+gpgkey=https://artifacts.elastic.co/GPG-KEY-elasticsearch
+enabled=1

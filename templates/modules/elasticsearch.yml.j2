@@ -1,0 +1,4 @@
+- module: elasticsearch
+  metricsets: {{ metricbeat_elasticsearch_metricsets | default(["node", "node_stats"]) | to_json }}
+  hosts: {{ metricbeat_elasticsearch_hosts | default("localhost:9200") | to_json }} 
+  period: {{ metricbeat_elasticsearch_period | default('10s') }}

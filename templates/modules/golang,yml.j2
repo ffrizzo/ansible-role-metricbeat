@@ -1,0 +1,8 @@
+- module: golang
+  metricsets: {{ metricbeat_golang_metricsets | default(["expvar", "heap"]) | to_json }}
+  hosts: {{ metricbeat_golang_hosts | default("localhost:8080") | to_json }} 
+  period: {{ metricbeat_golang_period | default('10s') }}
+  heap.path: {{ metricbeat_golang_path | default("/debug/vars") }}
+  expvar:
+    namespace: {{ metricbeat_golang_namespace | default("example") }}
+    path: {{ metricbeat_golang_path | default("/debug/vars") }}

@@ -1,0 +1,4 @@
+- module: docker
+  metricsets: {{ metricbeat_docker_metricsets | default(["container", "cpu", "diskio", "healthcheck", "info", "memory", "network"]) | to_json }}
+  hosts: {{ metricbeat_docker_hosts | default("unix:///var/run/docker.sock") | to_json }} 
+  period: {{ metricbeat_docker_period | default('10s') }}

@@ -1,0 +1,49 @@
+metricbeat.config.modules:
+  # Glob pattern for configuration loading
+  path: ${path.config}/modules.d/*.yml
+  # Set to true to enable config reloading
+  reload.enabled: true
+  # Period on which files under path should be checked for changes
+  reload.period: 10s
+
+#================================ General =====================================
+# The tags of the shipper are included in their own field with each
+# transaction published.
+tags: {{ metricbeat_tags | to_json }}
+
+# Optional fields that you can specify to add additional information to the
+# output.
+{% if metricbeat_fields %}
+fields:
+{{ metricbeat_fields | to_nice_yaml | indent(4, True) }}
+{% endif %}
+
+{% if metricbeat_processors %}
+processors:
+{% for p in metricbeat_processors %}
+{% if p.configs is defined %}
+    - {{ p.name }}:
+        {{ p.configs|indent(4) }}    
+{% endif %}
+{% if p.configs is not defined %}
+    - {{ p.name }}: ~
+{% endif %}
+{% endfor %}
+{% endif %}
+
+#================================ Outputs =====================================
+
+{% for output in metricbeat_outputs %}
+output.{{ output.name }}:
+    {{ output.configs|indent(4) }}
+{% endfor %}
+
+#================================ Logging =====================================
+# Sets log level. The default log level is info.
+logging.level: {{ metricbeat_logging_level }}
+logging.selectors: {{ metricbeat_logging_selectors }}
+
+#================================ Extra config =====================================
+{% if metricbeat_extra_configs is defined %}
+{{ metricbeat_extra_configs }}
+{% endif %}
