@@ -2,6 +2,8 @@
 metricbeat_major_version: "6.x"
 metricbeat_version: ""
 
+metricbeat_setup_templates: no
+
 metricbeat_elasticsearch_endpoint: http://localhost:9200
 
 metricbeat_tags: ["metricbeat"]
