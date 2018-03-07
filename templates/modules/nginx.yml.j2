@@ -3,7 +3,7 @@
   period: 10s
 
   # Nginx hosts
-  hosts: ["http://127.0.0.1"]
+  hosts: {{ metricbeat_nginx_hosts | default(['http://127.0.0.1']) | to_json }}
 
   # Path to server status. Default server-status
-  #server_status_path: "server-status"
+  server_status_path: "{{ metricbeat_nginx_server_status | default('nginx_status')}}"

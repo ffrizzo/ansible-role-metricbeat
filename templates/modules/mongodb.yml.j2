@@ -7,10 +7,14 @@
   # The username and password can also be set using the respective configuration
   # options. The credentials in the URL take precedence over the username and
   # password configuration options.
-  hosts: ["localhost:27017"]
+  hosts: {{ metricbeat_mongo_hosts | default(['localhost:27017']) | to_json }}
 
   # Username to use when connecting to MongoDB. Empty by default.
-  #username: user
+  {% if metricbeat_mongo_username %}
+  username: {{ metricbeat_mongo_username }}
+  {% endif %}
 
   # Password to use when connecting to MongoDB. Empty by default.
-  #password: pass
+  {% if metricbeat_mongo_password %}
+  password: {{ metricbeat_mongo_password }}
+  {% endif %}
