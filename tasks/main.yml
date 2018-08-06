@@ -10,6 +10,14 @@
     name: metricbeat
     state: started
     enabled: yes
+  when: metricbeat_enabled
+
+- name: Ensure metricbeat is not started and not enabled at boot
+  service:
+    name: metricbeat
+    state: stopped
+    enabled: no
+  when: not metricbeat_enabled
 
 - name: Copy metricbeat configuration
   template:

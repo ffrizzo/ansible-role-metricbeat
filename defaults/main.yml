@@ -1,4 +1,6 @@
 ---
+metricbeat_enabled: yes
+
 metricbeat_major_version: "6.x"
 metricbeat_version: ""
 
