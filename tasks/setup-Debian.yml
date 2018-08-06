@@ -1,22 +1,31 @@
 ---
+- name: Check if metricbeat already instaled
+  shell: |
+    dpkg --list | grep metricbeat
+  register: dpkg_list
+
 - name: Ensure dependency is installed (Ubuntu).
   apt: 
     name: apt-transport-https 
     state: present
+  when: dpkg_list.stdout_lines|length == 0
 
 - name: Add Elasticsearch apt key.
   apt_key:
     url: https://artifacts.elastic.co/GPG-KEY-elasticsearch
     state: present
+  when: dpkg_list.stdout_lines|length == 0
 
 - name: Add metricbeat repository.
   apt_repository:
     repo: 'deb https://artifacts.elastic.co/packages/{{ metricbeat_major_version }}/apt stable main'
     state: present
     update_cache: yes
+  when: dpkg_list.stdout_lines|length == 0
 
 - name: Install metricbeat.
   apt: 
     name: metricbeat{% if metricbeat_version is defined and metricbeat_version != "" %}={{ metricbeat_version }}{% endif %} 
     state: present
     update_cache: yes
+  when: dpkg_list.stdout_lines|length == 0
