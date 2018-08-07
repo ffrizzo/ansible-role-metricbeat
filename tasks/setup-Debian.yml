@@ -1,7 +1,7 @@
 ---
 - name: Check if metricbeat already instaled
   shell: |
-    dpkg --list | grep metricbeat
+    dpkg --list | grep metricbeat | cat
   register: dpkg_list
 
 - name: Ensure dependency is installed (Ubuntu).
