@@ -13,7 +13,7 @@ metricbeat_fields: ""
 
 metricbeat_outputs:
   - name: console
-    configs:
+    configs: |
       pretty: true
 
 metricbeat_logging_level: info      
